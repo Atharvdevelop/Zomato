@@ -7,7 +7,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  
+
   // Edit Form Fields
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState("");
@@ -25,7 +25,7 @@ export default function Profile() {
     try {
       setLoading(true);
       setError("");
-      
+
       const localUserStr = localStorage.getItem("user");
       if (!localUserStr) {
         throw new Error("No user session found. Please log in.");
@@ -45,7 +45,7 @@ export default function Profile() {
 
       const data = await res.json();
       setUserData(data);
-      
+
       // Initialize form fields
       setUsername(data.username || "");
       setEmail(data.email || "");
@@ -82,7 +82,7 @@ export default function Profile() {
       });
 
       const result = await res.json();
-      
+
       if (res.ok) {
         setSuccessMsg("Profile updated successfully!");
         setUserData(result.user);
@@ -196,8 +196,8 @@ export default function Profile() {
                 <label style={fieldLabelStyle}>Password</label>
                 <div style={{ ...fieldValueStyle, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span>{showPassword ? userData?.password : "••••••••••••"}</span>
-                  <button 
-                    onClick={() => setShowPassword(!showPassword)} 
+                  <button
+                    onClick={() => setShowPassword(!showPassword)}
                     style={textLinkBtnStyle}
                   >
                     {showPassword ? "Hide" : "Show"}

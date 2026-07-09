@@ -98,15 +98,15 @@ export default function Navbar({ isloggedIn, setIsLogin }: NavbarProps) {
           <Link to="/restaurants" style={{ textDecoration: "none", fontSize: 14, fontWeight: 500, color: "#696969" }}>
             Restaurants
           </Link>
-          
+
           {isloggedIn ? (
             <>
               <Link to="/profile" style={{ textDecoration: "none", fontSize: 14, fontWeight: 600, color: "#e23744", display: "flex", alignItems: "center", gap: 4 }}>
                 <span>👤</span>
                 <span>{currentUser?.username || "Profile"}</span>
               </Link>
-              <button 
-                onClick={handleLogoutClick} 
+              <button
+                onClick={handleLogoutClick}
                 style={{ background: "none", border: "none", color: "#696969", cursor: "pointer", fontSize: 14, fontWeight: 500, padding: 0, fontFamily: "inherit" }}
               >
                 Logout
@@ -157,14 +157,14 @@ export default function Navbar({ isloggedIn, setIsLogin }: NavbarProps) {
           <Link to="/restaurants" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
             🍴 Restaurants
           </Link>
-          
+
           {isloggedIn ? (
             <>
               <Link to="/profile" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
                 👤 Profile ({currentUser?.username || "My Account"})
               </Link>
-              <button 
-                onClick={handleLogoutClick} 
+              <button
+                onClick={handleLogoutClick}
                 style={{ background: "none", border: "none", color: "#e23744", cursor: "pointer", fontSize: 15, fontWeight: 500, padding: "8px 0", textAlign: "left", fontFamily: "inherit" }}
               >
                 🚪 Logout
