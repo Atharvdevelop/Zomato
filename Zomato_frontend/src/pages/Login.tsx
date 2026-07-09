@@ -1,36 +1,24 @@
 import { useState, FormEvent, CSSProperties } from 'react'
 
-export default function Login() {
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
+function Login() {
   const [password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
+  const [mobile, setMobile] = useState("")
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setMessage(`Welcome, ${username}!`)
   }
 
   return (
     <div style={containerStyle}>
       <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 800, fontSize: 24, color: "#1c1c1c", marginBottom: 24, textAlign: 'center' }}>Login</h2>
-      {message && <div style={{ color: "#2e7d32", backgroundColor: "#edf7ed", padding: "10px 14px", borderRadius: 8, marginBottom: 16, fontSize: 14 }}>{message}</div>}
+      <div style={{ color: "#2e7d32", backgroundColor: "#edf7ed", padding: "10px 14px", borderRadius: 8, marginBottom: 16, fontSize: 14 }}>Enter OTP</div>
       <form onSubmit={handleLogin}>
         <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          required
-          style={inputStyle}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-          style={inputStyle}
+          type='Mobile Number'
+          placeholder="mobile"
+          value={mobile}
+          onChange={e => setMobile(e.target.value)}
+          required style={inputStyle}
         />
         <input
           type="password"
@@ -82,3 +70,4 @@ const btnStyle: CSSProperties = {
   fontFamily: 'inherit',
 }
 
+export default Login;

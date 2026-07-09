@@ -10,6 +10,7 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderConfirmedPage from "./pages/OrderConfirmedPage";
 import ProtectRoutes from "./components/ProtectRoutes";
+import Login from "./pages/Login";
 
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
                 <CartPage />
                 </ProtectRoutes>
                 } />
+              <Route path="/login" element={<Login />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-confirmed" element={<OrderConfirmedPage />} />
               <Route path="*" element={
