@@ -1,0 +1,74 @@
+const User = require('../Models/UserModel');
+
+const CreateUser = async (req, res) => {
+    try {
+        const { mobile, username, email, password } = req.body;
+        const newuser = await User.create({ mobile, password, username, email });
+        res.status(201).json(newuser);
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+};
+// This is a universal code can be use anywhere to send whole code body
+
+//const CreareUser = async (req,res)=> {
+//  try {
+//    const newuser = await User.Create(req.body);
+//  res.status(201).json(newspaper);
+//  }
+//  catch (error){
+//    res.status(500).json({error :error.message});
+// }
+//}
+
+
+const GetAllUser = async (req, res) => {
+    try {
+        const users = await User.findAll();
+        res.status(200).json(users);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+};
+
+const DeleteUser = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+        if (user) {
+            await user.destroy();
+            res.status(200).json({ message: 'User deleted successfully' });
+        }
+        else {
+            res.status(404).json({ message: 'User not found' })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+
+};
+
+const LoginUser = async (req, res) => {
+    try {
+        const { mobile, password } = req.body;
+        const user = await User.findOne({ where: { mobile } })
+        if (!user) {
+            return res.status(400).json({ error: 'User not found' });
+        }
+        else if (user.password !== password) {
+            return res.status(401).json({ error: 'Invalid password' })
+        }
+        else {
+            res.status(200).json({ message: 'Login successfully', user });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+};
+
+
+module.exports = { CreateUser, GetAllUser, DeleteUser, LoginUser };
