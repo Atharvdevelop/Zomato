@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+@import 'tailwindcss';
+
+:root {
+  --primary: #e23744;
+  --primary-dark: #c0222f;
+  --primary-light: #ff6b7a;
+  --secondary: #1c1c1c;
+  --background: #f8f8f8;
+  --surface: #ffffff;
+  --border: #e8e8e8;
+  --text-primary: #1c1c1c;
+  --text-secondary: #696969;
+  --text-muted: #9e9e9e;
+  --success: #3d9b6e;
+  --warning: #f59d0e;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #aaa; }
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-bg: var(--background);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-txt: var(--text-primary);
+  --color-txt-secondary: var(--text-secondary);
+  --color-txt-muted: var(--text-muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --font-inter: 'Inter', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+}

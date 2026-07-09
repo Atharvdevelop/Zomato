@@ -1,0 +1,10 @@
+{
+  "description": "Explore local restaurants and cuisines with an intuitive interface, helping food lovers discover and order from their favorite dining spots.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
