@@ -3,6 +3,10 @@ const User = require('../Models/UserModel');
 const CreateUser = async (req, res) => {
     try {
         const { mobile, username, email, password } = req.body;
+        const existingUser = await User.findOne({ where: { mobile } });
+        if (existingUser) {
+            return res.status(400).json({ error: "User with this mobile number already exists" });
+        }
         const newuser = await User.create({ mobile, password, username, email });
         res.status(201).json(newuser);
 
@@ -71,4 +75,35 @@ const LoginUser = async (req, res) => {
 };
 
 
-module.exports = { CreateUser, GetAllUser, DeleteUser, LoginUser };
+const GetUserById = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+        if (user) {
+            res.status(200).json(user);
+        }
+        else {
+            res.status(404).json({ message: 'User not found' })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+};
+
+const UpdateUser = async (req, res) => {
+    try {
+        const { username, email, mobile, password } = req.body;
+        const user = await User.findByPk(req.params.id);
+        if (user) {
+            await user.update({ username, email, mobile, password });
+            res.status(200).json({ message: 'User updated successfully', user });
+        }
+        else {
+            res.status(404).json({ message: 'User not found' })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+};
+
+
+module.exports = { CreateUser, GetAllUser, DeleteUser, LoginUser, GetUserById, UpdateUser };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import Navbar from "./components/Navbar";
@@ -12,17 +12,27 @@ import OrderConfirmedPage from "./pages/OrderConfirmedPage";
 import ProtectRoutes from "./components/ProtectRoutes";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
 
 
 export default function App() {
   const [isloggedIn, setIsLogin] = useState(() => {
     return localStorage.getItem("isloggedIn") === "true";
   });
+  const [data, setdata] = useState<any[]>([]);
+  async function fetchdata() {
+    const res = await fetch("http://localhost:8006/api/users/all");
+    const data = await res.json();
+    setdata(data);
+  }
+  useEffect(() => {
+    fetchdata();
+  }, [])
   return (
 
     <CartProvider>
       <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#f8f8f8" }}>
-        <Navbar />
+        <Navbar isloggedIn={isloggedIn} setIsLogin={setIsLogin} />
         <main style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -33,8 +43,13 @@ export default function App() {
                 <CartPage />
               </ProtectRoutes>
             } />
+            <Route path="/profile" element={
+              <ProtectRoutes isloggedIn={isloggedIn}>
+                <Profile />
+              </ProtectRoutes>
+            } />
             <Route path="/login" element={<Login setIsLogin={setIsLogin} />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/signup" element={<Signup setData={setdata} />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-confirmed" element={<OrderConfirmedPage />} />
             <Route path="*" element={

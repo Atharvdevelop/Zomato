@@ -1,17 +1,52 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function Navbar() {
+interface NavbarProps {
+  isloggedIn?: boolean;
+  setIsLogin?: (val: boolean) => void;
+}
+
+export default function Navbar({ isloggedIn, setIsLogin }: NavbarProps) {
   const { totalItems } = useCart();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(() => {
+    const u = localStorage.getItem("user");
+    return u ? JSON.parse(u) : null;
+  });
+
+  useEffect(() => {
+    const handleUserUpdate = () => {
+      const u = localStorage.getItem("user");
+      setCurrentUser(u ? JSON.parse(u) : null);
+    };
+
+    window.addEventListener("user-updated", handleUserUpdate);
+    window.addEventListener("storage", handleUserUpdate);
+
+    return () => {
+      window.removeEventListener("user-updated", handleUserUpdate);
+      window.removeEventListener("storage", handleUserUpdate);
+    };
+  }, []);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
     if (query.trim()) navigate(`/restaurants?q=${encodeURIComponent(query.trim())}`);
   }
+
+  const handleLogoutClick = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      localStorage.removeItem("isloggedIn");
+      localStorage.removeItem("user");
+      if (setIsLogin) setIsLogin(false);
+      window.dispatchEvent(new Event("storage"));
+      setMenuOpen(false);
+      navigate("/login");
+    }
+  };
 
   return (
     <nav style={{ backgroundColor: "#fff", boxShadow: "0 2px 12px rgba(0,0,0,0.08)", position: "sticky", top: 0, zIndex: 100 }}>
@@ -63,6 +98,31 @@ export default function Navbar() {
           <Link to="/restaurants" style={{ textDecoration: "none", fontSize: 14, fontWeight: 500, color: "#696969" }}>
             Restaurants
           </Link>
+          
+          {isloggedIn ? (
+            <>
+              <Link to="/profile" style={{ textDecoration: "none", fontSize: 14, fontWeight: 600, color: "#e23744", display: "flex", alignItems: "center", gap: 4 }}>
+                <span>👤</span>
+                <span>{currentUser?.username || "Profile"}</span>
+              </Link>
+              <button 
+                onClick={handleLogoutClick} 
+                style={{ background: "none", border: "none", color: "#696969", cursor: "pointer", fontSize: 14, fontWeight: 500, padding: 0, fontFamily: "inherit" }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" style={{ textDecoration: "none", fontSize: 14, fontWeight: 500, color: "#696969" }}>
+                Login
+              </Link>
+              <Link to="/signup" style={{ textDecoration: "none", fontSize: 14, fontWeight: 500, color: "#696969" }}>
+                Signup
+              </Link>
+            </>
+          )}
+
           <Link to="/cart" style={{ position: "relative", textDecoration: "none" }}>
             <div style={{
               display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
@@ -97,6 +157,30 @@ export default function Navbar() {
           <Link to="/restaurants" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
             🍴 Restaurants
           </Link>
+          
+          {isloggedIn ? (
+            <>
+              <Link to="/profile" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
+                👤 Profile ({currentUser?.username || "My Account"})
+              </Link>
+              <button 
+                onClick={handleLogoutClick} 
+                style={{ background: "none", border: "none", color: "#e23744", cursor: "pointer", fontSize: 15, fontWeight: 500, padding: "8px 0", textAlign: "left", fontFamily: "inherit" }}
+              >
+                🚪 Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
+                🔑 Login
+              </Link>
+              <Link to="/signup" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
+                📝 Signup
+              </Link>
+            </>
+          )}
+
           <Link to="/cart" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#e23744", padding: "8px 0" }}>
             🛒 Cart {totalItems > 0 && `(${totalItems})`}
           </Link>
