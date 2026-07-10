@@ -4,7 +4,7 @@ const db = require('./Config/db');
 const userRoutes = require('./Routes/UserRoutes');
 const productRoutes = require('./Routes/ProductRoutes');
 const app = express();
-const PORT = 8006;
+const PORT = process.env.PORT || 8006;
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
