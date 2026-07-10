@@ -2,8 +2,18 @@ const ProductModel = require('../Models/ProductModel');
 
 const CreateProduct = async (req, res) => {
     try {
-       const newProduct = await ProductModel.create(req.body); 
-       res.status(201).json(newProduct);
+        const productData = { ...req.body };
+        if (req.file) {
+            productData.image = `http://localhost:8006/images/${req.file.filename}`;
+        }
+        if (productData.productprice) {
+            productData.productprice = parseInt(productData.productprice, 10);
+        }
+        if (productData.productstock) {
+            productData.productstock = parseInt(productData.productstock, 10);
+        }
+        const newProduct = await ProductModel.create(productData); 
+        res.status(201).json(newProduct);
     } catch (error) {
         res.status(500).json({message: error.message})
     }
@@ -33,15 +43,25 @@ const UpdateProduct = async (req, res) => {
     try {
         const product = await ProductModel.findByPk(req.params.id);
         if(product){
-            await product.update(req.body);
+            const productData = { ...req.body };
+            if (req.file) {
+                productData.image = `http://localhost:8006/images/${req.file.filename}`;
+            }
+            if (productData.productprice) {
+                productData.productprice = parseInt(productData.productprice, 10);
+            }
+            if (productData.productstock) {
+                productData.productstock = parseInt(productData.productstock, 10);
+            }
+            await product.update(productData);
             res.status(200).json(product);
+        }
+        else{
+            res.status(404).json({message: 'Product not found'})
+        }
+    } catch (error) {
+        res.status(500).json({message: error.message})
     }
-    else{
-        res.status(404).json({message: 'Product not found'})
-    }
-} catch (error) {
-    res.status(500).json({message: error.message})
-}
 
 };
 const DeleteProduct = async (req, res) => {

@@ -98,6 +98,9 @@ export default function Navbar({ isloggedIn, setIsLogin }: NavbarProps) {
           <Link to="/restaurants" style={{ textDecoration: "none", fontSize: 14, fontWeight: 500, color: "#696969" }}>
             Restaurants
           </Link>
+          <Link to="/product" style={{ textDecoration: "none", fontSize: 14, fontWeight: 500, color: "#696969" }}>
+            Products
+          </Link>
 
           {isloggedIn ? (
             <>
@@ -156,6 +159,9 @@ export default function Navbar({ isloggedIn, setIsLogin }: NavbarProps) {
         <div style={{ borderTop: "1px solid #e8e8e8", padding: "12px 24px 16px", background: "#fff" }} className="flex md:hidden flex-col gap-3">
           <Link to="/restaurants" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
             🍴 Restaurants
+          </Link>
+          <Link to="/product" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
+            📦 Products
           </Link>
 
           {isloggedIn ? (

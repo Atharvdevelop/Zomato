@@ -13,6 +13,7 @@ import ProtectRoutes from "./components/ProtectRoutes";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import Product from "./pages/Product";
 
 
 export default function App() {
@@ -28,6 +29,12 @@ export default function App() {
   useEffect(() => {
     fetchdata();
   }, [])
+  
+  useEffect(() => {
+    if (data.length > 0) {
+      console.log("Users loaded:", data.length);
+    }
+  }, [data])
   return (
 
     <CartProvider>
@@ -52,6 +59,7 @@ export default function App() {
             <Route path="/signup" element={<Signup setData={setdata} />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-confirmed" element={<OrderConfirmedPage />} />
+            <Route path="/product" element={<Product />} />
             <Route path="*" element={
               <div style={{ textAlign: "center", padding: "120px 20px" }}>
                 <div style={{ fontSize: 64, marginBottom: 16 }}>🍽️</div>

@@ -1,4 +1,5 @@
 const User = require('../Models/UserModel');
+const { generateToken } = require('../MiddleWare/AuthMiddleWare');
 
 const CreateUser = async (req, res) => {
     try {
@@ -8,8 +9,8 @@ const CreateUser = async (req, res) => {
             return res.status(400).json({ error: "User with this mobile number already exists" });
         }
         const newuser = await User.create({ mobile, password, username, email });
-        res.status(201).json(newuser);
-
+        const token = generateToken(newuser);
+        res.status(201).json({ ...newuser.toJSON(), token });
     }
     catch (err) {
         console.log(err);
@@ -67,7 +68,8 @@ const LoginUser = async (req, res) => {
             return res.status(401).json({ error: 'Invalid password' })
         }
         else {
-            res.status(200).json({ message: 'Login successfully', user });
+            const token = generateToken(user);
+            res.status(200).json({ message: 'Login successfully', user: { ...user.toJSON(), token } });
         }
     } catch (error) {
         res.status(500).json({ message: error.message })

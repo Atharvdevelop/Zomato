@@ -12,7 +12,6 @@ function Signup({ setData }: SignupProps) {
     const [message, setMessage] = useState("")
     const [isError, setIsError] = useState(false)
     const [loading, setLoading] = useState(false)
-
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
         setLoading(true)
@@ -99,6 +98,7 @@ function Signup({ setData }: SignupProps) {
                     required
                     style={inputStyle}
                 />
+                
 
                 <label style={labelStyle}>Password</label>
                 <input

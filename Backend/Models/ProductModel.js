@@ -26,6 +26,10 @@ const Product = db.define('Product', {
     productstock:{
         type:DataTypes.INTEGER,
         allowNull:false
+    },
+    image:{
+        type:DataTypes.TEXT,
+        allowNull:true
     }
 });
 
