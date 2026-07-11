@@ -25,6 +25,6 @@ const UserModel = db.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
     }
-}, { timestamps: true });
+}, { timestamps: true, tableName: 'Users' });
 
 module.exports = UserModel
