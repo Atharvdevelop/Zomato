@@ -21,7 +21,7 @@ function Login({ setIsLogin }: LoginProps) {
     setIsError(false)
 
     try {
-      const res = await fetch('http://localhost:8006/api/users/login', {
+      const res = await fetch('http://zomato-production-aca8.up.railway.app/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -58,14 +58,14 @@ function Login({ setIsLogin }: LoginProps) {
   return (
     <div style={containerStyle}>
       <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 800, fontSize: 24, color: "#1c1c1c", marginBottom: 24, textAlign: 'center' }}>Login</h2>
-      
+
       {message && (
-        <div style={{ 
-          color: isError ? "#d32f2f" : "#2e7d32", 
-          backgroundColor: isError ? "#fdeded" : "#edf7ed", 
-          padding: "12px 14px", 
-          borderRadius: 8, 
-          marginBottom: 16, 
+        <div style={{
+          color: isError ? "#d32f2f" : "#2e7d32",
+          backgroundColor: isError ? "#fdeded" : "#edf7ed",
+          padding: "12px 14px",
+          borderRadius: 8,
+          marginBottom: 16,
           fontSize: 14,
           textAlign: 'center',
           fontWeight: 500
@@ -81,7 +81,7 @@ function Login({ setIsLogin }: LoginProps) {
           placeholder="Enter mobile number"
           value={mobile}
           onChange={e => setMobile(e.target.value)}
-          required 
+          required
           style={inputStyle}
         />
         <label style={labelStyle}>Password</label>
