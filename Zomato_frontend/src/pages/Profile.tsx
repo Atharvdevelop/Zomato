@@ -38,7 +38,7 @@ export default function Profile() {
         throw new Error("Invalid user session. User ID missing.");
       }
 
-      const res = await fetch(`http://localhost:8006/api/users/${userId}`);
+      const res = await fetch(`http://zomato-production-aca8.up.railway.app/api/users/${userId}`);
       if (!res.ok) {
         throw new Error(`Failed to fetch profile: ${res.statusText}`);
       }
@@ -68,7 +68,7 @@ export default function Profile() {
       setError("");
       setSuccessMsg("");
 
-      const res = await fetch(`http://localhost:8006/api/users/${userData.id}`, {
+      const res = await fetch(`http://zomato-production-aca8.up.railway.app/api/users/${userData.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

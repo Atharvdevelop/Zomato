@@ -4,7 +4,7 @@ const CreateProduct = async (req, res) => {
     try {
         const productData = { ...req.body };
         if (req.file) {
-            productData.image = `http://localhost:8006/images/${req.file.filename}`;
+            productData.image = `http://zomato-production-aca8.up.railway.app/images/${req.file.filename}`;
         }
         if (productData.productprice) {
             productData.productprice = parseInt(productData.productprice, 10);
@@ -45,7 +45,7 @@ const UpdateProduct = async (req, res) => {
         if(product){
             const productData = { ...req.body };
             if (req.file) {
-                productData.image = `http://localhost:8006/images/${req.file.filename}`;
+                productData.image = `http://zomato-production-aca8.up.railway.app/images/${req.file.filename}`;
             }
             if (productData.productprice) {
                 productData.productprice = parseInt(productData.productprice, 10);

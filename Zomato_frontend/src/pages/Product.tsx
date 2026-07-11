@@ -28,7 +28,7 @@ export default function Product() {
     // Fetch existing products
     const fetchProducts = async () => {
         try {
-            const res = await fetch("http://localhost:8006/api/products/all");
+            const res = await fetch("http://zomato-production-aca8.up.railway.app/api/products/all");
             if (res.ok) {
                 const data = await res.json();
                 setProducts(data);
@@ -65,7 +65,7 @@ export default function Product() {
                 formData.append("image", image);
             }
 
-            const res = await fetch("http://localhost:8006/api/products/create", {
+            const res = await fetch("http://zomato-production-aca8.up.railway.app/api/products/create", {
                 method: "POST",
                 body: formData,
             });
@@ -101,7 +101,7 @@ export default function Product() {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
 
         try {
-            const res = await fetch(`http://localhost:8006/api/products/${id}`, {
+            const res = await fetch(`http://zomato-production-aca8.up.railway.app/api/products/${id}`, {
                 method: "DELETE",
             });
 
