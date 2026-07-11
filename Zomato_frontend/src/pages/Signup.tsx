@@ -19,7 +19,7 @@ function Signup({ setData }: SignupProps) {
         setIsError(false)
 
         try {
-            const res = await fetch('http://zomato-production-aca8.up.railway.app/api/users/signup', {
+            const res = await fetch('https://zomato-production-aca8.up.railway.app/api/users/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
