@@ -22,7 +22,7 @@ export default function App() {
   });
   const [data, setdata] = useState<any[]>([]);
   async function fetchdata() {
-    const res = await fetch("http://zomato-production-aca8.up.railway.app/api/users/all");
+    const res = await fetch("https://zomato-production-aca8.up.railway.app/api/users/all");
     const data = await res.json();
     setdata(data);
   }

@@ -21,7 +21,7 @@ function Login({ setIsLogin }: LoginProps) {
     setIsError(false)
 
     try {
-      const res = await fetch('http://zomato-production-aca8.up.railway.app/api/users/login', {
+      const res = await fetch('https://zomato-production-aca8.up.railway.app/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
