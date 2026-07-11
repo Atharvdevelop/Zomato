@@ -14,7 +14,7 @@ const CreateUser = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ message: 'Internal Server Error' })
+        res.status(500).json({ message: err.message });
     }
 };
 // This is a universal code can be use anywhere to send whole code body
@@ -37,7 +37,7 @@ const GetAllUser = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ message: 'Internal Server Error' })
+        res.status(500).json({ message: err.message });
     }
 };
 
