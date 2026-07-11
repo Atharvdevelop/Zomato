@@ -14,7 +14,11 @@ const CreateUser = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ 
+            message: err.message || "Unknown error",
+            error: String(err),
+            stack: err.stack 
+        });
     }
 };
 // This is a universal code can be use anywhere to send whole code body
@@ -37,7 +41,11 @@ const GetAllUser = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ 
+            message: err.message || "Unknown error",
+            error: String(err),
+            stack: err.stack 
+        });
     }
 };
 
