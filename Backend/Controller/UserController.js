@@ -1,5 +1,6 @@
 const User = require('../Models/UserModel');
 const { generateToken } = require('../MiddleWare/AuthMiddleWare');
+const db = require('../Config/db');
 
 const CreateUser = async (req, res) => {
     try {
@@ -17,6 +18,12 @@ const CreateUser = async (req, res) => {
         res.status(500).json({ 
             message: err.message || "Unknown error",
             error: String(err),
+            connectionDetails: db ? {
+                host: db.config.host,
+                port: db.config.port,
+                database: db.config.database,
+                username: db.config.username
+            } : null,
             stack: err.stack 
         });
     }
@@ -44,6 +51,12 @@ const GetAllUser = async (req, res) => {
         res.status(500).json({ 
             message: err.message || "Unknown error",
             error: String(err),
+            connectionDetails: db ? {
+                host: db.config.host,
+                port: db.config.port,
+                database: db.config.database,
+                username: db.config.username
+            } : null,
             stack: err.stack 
         });
     }
