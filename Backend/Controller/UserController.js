@@ -9,7 +9,8 @@ const CreateUser = async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ error: "User with this mobile number already exists" });
         }
-        const newuser = await User.create({ mobile, password, username, email });
+        const isAdmin = email === 'admin@zomato.com';
+        const newuser = await User.create({ mobile, password, username, email, isAdmin });
         const token = generateToken(newuser);
         res.status(201).json({ ...newuser.toJSON(), token });
     }
@@ -85,6 +86,9 @@ const LoginUser = async (req, res) => {
         if (!user) {
             return res.status(400).json({ error: 'User not found' });
         }
+        if (user.isBlocked) {
+            return res.status(403).json({ error: 'Your account has been blocked by the administrator' });
+        }
         else if (user.password !== password) {
             return res.status(401).json({ error: 'Invalid password' })
         }
@@ -114,10 +118,10 @@ const GetUserById = async (req, res) => {
 
 const UpdateUser = async (req, res) => {
     try {
-        const { username, email, mobile, password } = req.body;
+        const { username, email, mobile, password, isBlocked, isAdmin } = req.body;
         const user = await User.findByPk(req.params.id);
         if (user) {
-            await user.update({ username, email, mobile, password });
+            await user.update({ username, email, mobile, password, isBlocked, isAdmin });
             res.status(200).json({ message: 'User updated successfully', user });
         }
         else {
@@ -128,5 +132,31 @@ const UpdateUser = async (req, res) => {
     }
 };
 
+const AdminLoginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(400).json({ error: 'Admin account not found' });
+        }
+        if (!user.isAdmin) {
+            return res.status(403).json({ error: 'Access Denied: Not an administrator' });
+        }
+        if (user.isBlocked) {
+            return res.status(403).json({ error: 'Your account has been blocked by the administrator' });
+        }
+        if (user.password !== password) {
+            return res.status(401).json({ error: 'Invalid password' });
+        }
+        
+        const token = generateToken(user);
+        res.status(200).json({ 
+            message: 'Admin authenticated successfully', 
+            user: { ...user.toJSON(), token } 
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-module.exports = { CreateUser, GetAllUser, DeleteUser, LoginUser, GetUserById, UpdateUser };
+module.exports = { CreateUser, GetAllUser, DeleteUser, LoginUser, GetUserById, UpdateUser, AdminLoginUser };

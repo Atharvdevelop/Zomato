@@ -1,5 +1,6 @@
 import { useState, FormEvent, CSSProperties } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { API_BASE_URL } from '../config'
 
 interface LoginProps {
   setIsLogin: (val: boolean) => void;
@@ -21,7 +22,7 @@ function Login({ setIsLogin }: LoginProps) {
     setIsError(false)
 
     try {
-      const res = await fetch('https://zomato-production-aca8.up.railway.app/api/users/login', {
+      const res = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -104,6 +104,11 @@ export default function Navbar({ isloggedIn, setIsLogin }: NavbarProps) {
 
           {isloggedIn ? (
             <>
+              {currentUser?.isAdmin && (
+                <Link to="/admin" style={{ textDecoration: "none", fontSize: 14, fontWeight: 700, color: "#9333ea", marginRight: 8 }}>
+                  🛡️ Admin Panel
+                </Link>
+              )}
               <Link to="/profile" style={{ textDecoration: "none", fontSize: 14, fontWeight: 600, color: "#e23744", display: "flex", alignItems: "center", gap: 4 }}>
                 <span>👤</span>
                 <span>{currentUser?.username || "Profile"}</span>
@@ -166,6 +171,11 @@ export default function Navbar({ isloggedIn, setIsLogin }: NavbarProps) {
 
           {isloggedIn ? (
             <>
+              {currentUser?.isAdmin && (
+                <Link to="/admin" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 700, color: "#9333ea", padding: "8px 0" }}>
+                  🛡️ Admin Panel
+                </Link>
+              )}
               <Link to="/profile" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontSize: 15, fontWeight: 500, color: "#1c1c1c", padding: "8px 0" }}>
                 👤 Profile ({currentUser?.username || "My Account"})
               </Link>

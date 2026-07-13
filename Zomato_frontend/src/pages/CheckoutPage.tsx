@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { restaurants } from "../data/restaurants";
+import { API_BASE_URL } from "../config";
 
 const paymentMethods = [
   { id: "upi", label: "UPI", icon: "📱", desc: "PhonePe, GPay, Paytm & more" },
@@ -30,12 +31,53 @@ export default function CheckoutPage() {
   const gst = Math.round(totalPrice * 0.05);
   const grandTotal = totalPrice + deliveryFee + platformFee + gst + tip;
 
-  function placeOrder() {
+  async function placeOrder() {
     setPlacing(true);
-    setTimeout(() => {
+    const orderId = `ZOM${Math.floor(100000000 + Math.random() * 900000000)}`;
+    const addressText = addresses.find((a) => a.id === selectedAddress)?.address || "";
+    const userStr = localStorage.getItem("user");
+    const userId = userStr ? JSON.parse(userStr).id : 1;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/orders/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderId,
+          userId,
+          restaurantName: restaurant?.name || "Zomato Partner",
+          items: items.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity
+          })),
+          totalPrice,
+          deliveryFee,
+          platformFee,
+          gst,
+          tip,
+          grandTotal,
+          address: addressText,
+          paymentMethod: selectedPayment
+        }),
+      });
+
+      if (res.ok) {
+        clearCart();
+        navigate(`/order-confirmed?orderId=${orderId}`);
+      } else {
+        console.warn("Failed to create order on server. Placing locally...");
+        clearCart();
+        navigate(`/order-confirmed?orderId=${orderId}`);
+      }
+    } catch (err) {
+      console.error("Order Place Error:", err);
       clearCart();
-      navigate("/order-confirmed");
-    }, 2000);
+      navigate(`/order-confirmed?orderId=${orderId}`);
+    }
   }
 
   if (items.length === 0 && !placing) {

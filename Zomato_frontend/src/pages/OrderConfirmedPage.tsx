@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
 const steps = [
   { icon: "✅", label: "Order Placed", desc: "Your order has been received", time: "Just now" },
@@ -8,24 +9,63 @@ const steps = [
   { icon: "🏠", label: "Delivered", desc: "Enjoy your meal!", time: "30 mins" },
 ];
 
-const orderId = `ZOM${Math.floor(100000000 + Math.random() * 900000000)}`;
-
 export default function OrderConfirmedPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [orderId, setOrderId] = useState(() => {
+    return new URLSearchParams(location.search).get("orderId") || `ZOM${Math.floor(100000000 + Math.random() * 900000000)}`;
+  });
   const [activeStep, setActiveStep] = useState(0);
   const [countdown, setCountdown] = useState(32 * 60); // 32 minutes in seconds
+  const [isCancelled, setIsCancelled] = useState(false);
 
+  // Poll status from database if orderId is valid
   useEffect(() => {
-    const stepTimer = setInterval(() => {
-      setActiveStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
-    }, 4000);
+    const isMock = !new URLSearchParams(location.search).get("orderId");
+    
+    if (isMock) {
+      // Run fallback simulated tracking timer
+      const stepTimer = setInterval(() => {
+        setActiveStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+      }, 6000);
+      return () => clearInterval(stepTimer);
+    } else {
+      const fetchOrderStatus = async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/orders/${orderId}`);
+          if (res.ok) {
+            const order = await res.json();
+            const status = order.status;
+            setIsCancelled(status === 'Cancelled');
+            if (status === 'Order Placed') setActiveStep(0);
+            else if (status === 'Preparing') setActiveStep(1);
+            else if (status === 'Out for Delivery') setActiveStep(2);
+            else if (status === 'Delivered') {
+              setActiveStep(3);
+              setCountdown(0);
+            } else if (status === 'Cancelled') {
+              setActiveStep(-1);
+            }
+          }
+        } catch (err) {
+          console.error("Error polling order status:", err);
+        }
+      };
 
+      fetchOrderStatus();
+      const pollTimer = setInterval(fetchOrderStatus, 4000);
+      return () => clearInterval(pollTimer);
+    }
+  }, [orderId, location.search]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (isCancelled || activeStep === 3) return;
     const countTimer = setInterval(() => {
       setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
-
-    return () => { clearInterval(stepTimer); clearInterval(countTimer); };
-  }, []);
+    return () => clearInterval(countTimer);
+  }, [isCancelled, activeStep]);
 
   const mins = Math.floor(countdown / 60);
   const secs = countdown % 60;
@@ -36,17 +76,17 @@ export default function OrderConfirmedPage() {
         {/* Success animation */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{
-            width: 100, height: 100, borderRadius: "50%", background: "linear-gradient(135deg, #3d9b6e, #60b246)",
+            width: 100, height: 100, borderRadius: "50%", background: isCancelled ? "linear-gradient(135deg, #7f1d1d, #ef4444)" : "linear-gradient(135deg, #3d9b6e, #60b246)",
             display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px",
-            boxShadow: "0 8px 32px rgba(61,155,110,0.3)", fontSize: 48,
+            boxShadow: isCancelled ? "0 8px 32px rgba(239,68,68,0.3)" : "0 8px 32px rgba(61,155,110,0.3)", fontSize: 48,
           }}>
-            🎉
+            {isCancelled ? "❌" : "🎉"}
           </div>
           <h1 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 900, fontSize: 30, color: "#1c1c1c", margin: "0 0 8px" }}>
-            Order Confirmed!
+            {isCancelled ? "Order Cancelled" : "Order Confirmed!"}
           </h1>
           <p style={{ color: "#696969", fontSize: 16, margin: 0 }}>
-            Your food is being prepared with love
+            {isCancelled ? "This order was cancelled by control operations." : "Your food is being prepared with love"}
           </p>
           <div style={{ display: "inline-block", background: "#fff", border: "1.5px solid #e8e8e8", borderRadius: 8, padding: "6px 16px", marginTop: 12 }}>
             <span style={{ fontSize: 13, color: "#9e9e9e" }}>Order ID: </span>
@@ -54,20 +94,36 @@ export default function OrderConfirmedPage() {
           </div>
         </div>
 
-        {/* ETA card */}
-        <div style={{
-          background: "linear-gradient(135deg, #e23744, #c0222f)",
-          borderRadius: 20, padding: "28px 32px", textAlign: "center", marginBottom: 28,
-          boxShadow: "0 8px 32px rgba(226,55,68,0.25)",
-        }}>
-          <p style={{ color: "rgba(255,255,255,0.8)", margin: "0 0 8px", fontSize: 14 }}>Estimated Delivery Time</p>
-          <div style={{ fontFamily: "Poppins, sans-serif", color: "#fff", fontWeight: 900, fontSize: 52, lineHeight: 1 }}>
-            {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+        {/* ETA or Cancelled card */}
+        {isCancelled ? (
+          <div style={{
+            background: "linear-gradient(135deg, #7f1d1d, #ef4444)",
+            borderRadius: 20, padding: "28px 32px", textAlign: "center", marginBottom: 28,
+            boxShadow: "0 8px 32px rgba(239,68,68,0.25)",
+          }}>
+            <p style={{ color: "rgba(255,255,255,0.9)", margin: "0 0 8px", fontSize: 14, fontWeight: 700 }}>ORDER CANCELLED</p>
+            <div style={{ fontFamily: "Poppins, sans-serif", color: "#fff", fontWeight: 900, fontSize: 20, lineHeight: 1.4 }}>
+              Your order has been manually cancelled by the administrator.
+            </div>
+            <p style={{ color: "rgba(255,255,255,0.8)", margin: "12px 0 0", fontSize: 13 }}>
+              Please contact customer support for refund or dispute information.
+            </p>
           </div>
-          <p style={{ color: "rgba(255,255,255,0.7)", margin: "8px 0 0", fontSize: 13 }}>
-            Arriving by {new Date(Date.now() + countdown * 1000).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
-          </p>
-        </div>
+        ) : (
+          <div style={{
+            background: "linear-gradient(135deg, #e23744, #c0222f)",
+            borderRadius: 20, padding: "28px 32px", textAlign: "center", marginBottom: 28,
+            boxShadow: "0 8px 32px rgba(226,55,68,0.25)",
+          }}>
+            <p style={{ color: "rgba(255,255,255,0.8)", margin: "0 0 8px", fontSize: 14 }}>Estimated Delivery Time</p>
+            <div style={{ fontFamily: "Poppins, sans-serif", color: "#fff", fontWeight: 900, fontSize: 52, lineHeight: 1 }}>
+              {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+            </div>
+            <p style={{ color: "rgba(255,255,255,0.7)", margin: "8px 0 0", fontSize: 13 }}>
+              Arriving by {new Date(Date.now() + countdown * 1000).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
+            </p>
+          </div>
+        )}
 
         {/* Tracking Steps */}
         <div style={{ background: "#fff", borderRadius: 16, padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", marginBottom: 24 }}>

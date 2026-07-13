@@ -14,6 +14,9 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import Product from "./pages/Product";
+import AdminLogin from "./pages/AdminLogin";
+import AdminPanel from "./pages/AdminPanel";
+import { API_BASE_URL } from "./config";
 
 
 export default function App() {
@@ -22,7 +25,7 @@ export default function App() {
   });
   const [data, setdata] = useState<any[]>([]);
   async function fetchdata() {
-    const res = await fetch("https://zomato-production-aca8.up.railway.app/api/users/all");
+    const res = await fetch(`${API_BASE_URL}/api/users/all`);
     const data = await res.json();
     setdata(data);
   }
@@ -60,6 +63,8 @@ export default function App() {
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-confirmed" element={<OrderConfirmedPage />} />
             <Route path="/product" element={<Product />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="*" element={
               <div style={{ textAlign: "center", padding: "120px 20px" }}>
                 <div style={{ fontSize: 64, marginBottom: 16 }}>🍽️</div>

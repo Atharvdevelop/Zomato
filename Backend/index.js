@@ -4,6 +4,7 @@ const express = require('express');
 const db = require('./Config/db');
 const userRoutes = require('./Routes/UserRoutes');
 const productRoutes = require('./Routes/ProductRoutes');
+const orderRoutes = require('./Routes/OrderRoutes');
 const app = express();
 const PORT = process.env.PORT || 8006;
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 app.use('/images', express.static('public/images'));
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 db.authenticate().then(() => {
     console.log('Database connected successfully');
     db.sync({ alter: true });

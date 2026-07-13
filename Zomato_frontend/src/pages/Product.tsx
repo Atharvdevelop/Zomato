@@ -1,4 +1,5 @@
 import { useState, useEffect, FormEvent, CSSProperties } from 'react';
+import { API_BASE_URL } from '../config';
 
 interface ProductData {
     id: number;
@@ -28,7 +29,7 @@ export default function Product() {
     // Fetch existing products
     const fetchProducts = async () => {
         try {
-            const res = await fetch("https://zomato-production-aca8.up.railway.app/api/products/all");
+            const res = await fetch(`${API_BASE_URL}/api/products/all`);
             if (res.ok) {
                 const data = await res.json();
                 setProducts(data);
@@ -65,7 +66,7 @@ export default function Product() {
                 formData.append("image", image);
             }
 
-            const res = await fetch("https://zomato-production-aca8.up.railway.app/api/products/create", {
+            const res = await fetch(`${API_BASE_URL}/api/products/create`, {
                 method: "POST",
                 body: formData,
             });
@@ -101,7 +102,7 @@ export default function Product() {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
 
         try {
-            const res = await fetch(`https://zomato-production-aca8.up.railway.app/api/products/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/products/${id}`, {
                 method: "DELETE",
             });
 

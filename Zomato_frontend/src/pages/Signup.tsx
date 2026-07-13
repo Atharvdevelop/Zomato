@@ -1,5 +1,6 @@
 import { useState, FormEvent, CSSProperties } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { API_BASE_URL } from '../config'
 interface SignupProps {
     setData: React.Dispatch<React.SetStateAction<any[]>>;
 }
@@ -19,7 +20,7 @@ function Signup({ setData }: SignupProps) {
         setIsError(false)
 
         try {
-            const res = await fetch('https://zomato-production-aca8.up.railway.app/api/users/signup', {
+            const res = await fetch(`${API_BASE_URL}/api/users/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

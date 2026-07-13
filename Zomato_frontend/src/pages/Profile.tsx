@@ -1,5 +1,6 @@
 import { useState, useEffect, CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ export default function Profile() {
         throw new Error("Invalid user session. User ID missing.");
       }
 
-      const res = await fetch(`https://zomato-production-aca8.up.railway.app/api/users/${userId}`);
+      const res = await fetch(`${API_BASE_URL}/api/users/${userId}`);
       if (!res.ok) {
         throw new Error(`Failed to fetch profile: ${res.statusText}`);
       }
@@ -68,7 +69,7 @@ export default function Profile() {
       setError("");
       setSuccessMsg("");
 
-      const res = await fetch(`https://zomato-production-aca8.up.railway.app/api/users/${userData.id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/users/${userData.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

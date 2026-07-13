@@ -24,6 +24,14 @@ const UserModel = db.define('User', {
     password: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    isBlocked: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+    isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     }
 }, { timestamps: true, tableName: 'Users' });
 

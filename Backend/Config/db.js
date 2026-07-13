@@ -1,8 +1,9 @@
 const Sequelize = require("sequelize");
 
 let db;
-if (process.env.MYSQL_URL || process.env.DATABASE_URL) {
-    db = new Sequelize(process.env.MYSQL_URL || process.env.DATABASE_URL, {
+const connString = process.env.MYSQL_PUBLIC_URL || process.env.MYSQL_URL || process.env.DATABASE_URL;
+if (connString) {
+    db = new Sequelize(connString, {
         dialect: 'mysql',
     });
 } else {
